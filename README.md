@@ -35,6 +35,12 @@ For XDB user, run this:
 docker run -d -p 49160:22 -p 49161:1521 -p 8080:8080 -e ORACLE_ENABLE_XDB=true wnameless/oracle-xe-11g
 ```
 
+For XDB user with oracle notification, run this:
+```
+docker run -d -p 49160:22 -p 49161:1521 -p 8080:8080 -e ORACLE_ENABLE_XDB=true wnameless/oracle-xe-11g UTL_HTTP_ENDPOINT=172.17.0.1:3000/db
+```
+
+
 Check if localhost:8080 work
 ```
 curl -XGET "http://localhost:8080"

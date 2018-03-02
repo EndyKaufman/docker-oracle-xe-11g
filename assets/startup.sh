@@ -43,3 +43,29 @@ for f in /docker-entrypoint-initdb.d/*; do
   esac
   echo
 done
+
+for f in /cq_notification/*; do
+  case "$f" in
+    *-sys.sh)     echo "$0: running $f"; . "$f" ;;
+    *-sys.sql)    echo "$0: running $f"; echo "exit" | /u01/app/oracle/product/11.2.0/xe/bin/sqlplus "SYS/oracle" AS SYSDBA @"$f"; echo ;;
+    *)        echo "$0: ignoring $f" ;;
+  esac
+  echo
+done
+
+for f in /cq_notification/*; do
+  case "$f" in
+    *-hr.sh)     echo "$0: running $f"; . "$f" ;;
+    *-hr.sql)    echo "$0: running $f"; echo "exit" | /u01/app/oracle/product/11.2.0/xe/bin/sqlplus "HR/welcome" AS SYSDBA @"$f"; echo ;;
+    *)        echo "$0: ignoring $f" ;;
+  esac
+  echo
+done
+
+if [ "$UTL_HTTP_ENDPOINT" ]; then
+  rpl "UTL_HTTP_ENDPOINT" "$UTL_HTTP_ENDPOINT" ./cq_notification/init-hr.sql
+fi
+
+if [ "$UTL_HTTP_ENDPOINT" ]; then
+  rpl "UTL_HTTP_ENDPOINT" "$UTL_HTTP_ENDPOINT" ./cq_notification/init-sys.sql
+fi
